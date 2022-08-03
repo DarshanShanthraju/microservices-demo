@@ -14,6 +14,7 @@ gcloud services enable monitoring.googleapis.com \
     --project ${PROJECT_ID}
 
 # Create a GKE cluster
-REGION=us-central1
-gcloud container clusters create-auto onlineboutique \
-    --project=${PROJECT_ID} --region=${REGION}
+ZONE=us-central1-b
+gcloud container clusters create onlineboutique \
+    --project=${PROJECT_ID} --zone=${ZONE} \
+    --machine-type=e2-standard-2 --num-nodes=4
