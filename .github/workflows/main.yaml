@@ -1,0 +1,58 @@
+name: 'Build & Deploy to GKE'
+on:
+  push:
+    branches:
+      - main
+env:
+  GKE_PROJECT: cr-gcp-devsecops-353409
+  GKE_SA_KEY: fec576b6bc7e2cc95b62fbaae837e35e3da46a18
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    steps:
+      - uses: actions/checkout@v3
+      # Install kubectl
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+          echo "$(<kubectl.sha256) kubectl" | sha256sum --check
+
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+          kubectl version --client
+      # Install Skaffold
+      - name: Install Skaffold
+        run: |
+          curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
+          sudo install skaffold /usr/local/bin/
+          skaffold version
+      # Cache skaffold image builds & config
+      - name: Cache skaffold image builds & config
+        uses: actions/cache@v2
+        with:
+          path: ~/.skaffold/
+          key: fixed-${{ github.sha }}
+      # Setup gcloud CLI
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v0.6.0
+        with:
+          service_account_key: $GKE_SA_KEY
+          project_id: $GKE_PROJECT
+          export_default_credentials: true 
+      # Enable Google Container Registry (GCR) on your GCP project and configure the docker CLI to authenticate to GCR
+      - name: Enable GCR 
+        run: | 
+          gcloud services enable containerregistry.googleapis.com
+          gcloud auth configure-docker -q
+      # Build and deploy to GKE cluster
+      - name: Build and deploy to GKE cluster with Skaffold
+        run: skaffold run -p gcb --default-repo=gcr.io/$GKE_PROJECT
+      # Verify deployment
+      - name: Verify deployment
+        run: kubectl get pods
+      # Get the IP address
+      - name: Get the IP address
+        run: kubectl get service frontend-external
