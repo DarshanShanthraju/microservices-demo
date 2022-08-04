@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - main
-    #paths:
-      #- src/**
+    paths:
+      - src/**
 env:
   GKE_CLUSTER: onlineboutique
   GKE_ZONE: europe-west3-a
