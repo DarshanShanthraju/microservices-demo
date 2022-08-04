@@ -41,7 +41,7 @@ jobs:
       - name: Set up gcloud CLI
         uses: google-github-actions/setup-gcloud@v0.6.0
         with:
-          service_account_key: ec576b6bc7e2cc95b62fbaae837e35e3da46a18
+          service_account_key: ZWM1NzZiNmJjN2UyY2M5NWI2MmZiYWFlODM3ZTM1ZTNkYTQ2YTE4
           project_id: cr-gcp-devsecops-353409
           export_default_credentials: true 
       # Enable Google Container Registry (GCR) on your GCP project and configure the docker CLI to authenticate to GCR
