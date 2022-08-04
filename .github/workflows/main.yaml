@@ -52,8 +52,8 @@ jobs:
       # Build and deploy to GKE cluster
       - name: Build and deploy to GKE cluster with Skaffold
         run: | 
-        gcloud auth configure-docker europe-west3-docker.pkg.dev
-        skaffold run -p gcb --default-repo=europe-west3.pkg.dev/'${{ secrets.GCP_PROJECT_ID }}'
+          gcloud auth configure-docker europe-west3-docker.pkg.dev
+          skaffold run -p gcb --default-repo=europe-west3.pkg.dev/'${{ secrets.GCP_PROJECT_ID }}'
       # Verify deployment
       - name: Verify deployment
         run: kubectl get pods
