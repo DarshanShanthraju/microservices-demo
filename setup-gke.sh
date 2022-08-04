@@ -11,6 +11,10 @@ export GKE_ZONE=europe-west3-a
 export GKE_CLUSTER=onlineboutique
 export GKE_SERVICE_ACCOUNT=github-deployment
 
+gcloud config set project $GKE_PROJECT
+gcloud config set compute/zone $GKE_ZONE
+gcloud config set compute/region $GKE_REGION
+
 # Create a GKE cluster
 gcloud container clusters create onlineboutique \
     --project=$PROJECT_ID --zone=$GKE_ZONE \
