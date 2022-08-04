@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - src/**
+   # paths:
+     # - src/**
 env:
   GKE_PROJECT: cr-gcp-devsecops-353409
   GKE_SA_KEY: fec576b6bc7e2cc95b62fbaae837e35e3da46a18
