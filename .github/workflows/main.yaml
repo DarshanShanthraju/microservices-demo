@@ -75,8 +75,12 @@ jobs:
       # Build and deploy to GKE cluster
       - name: Build and deploy to GKE cluster with Skaffold
         run: |
-          skaffold config set default-repo ${{ env.GAR_LOCATION }}/docker.pkg.dev/cr-gcp-devsecops-353409
-          skaffold run
+          skaffold config set --global local-cluster false
+          skaffold build --default-repo=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }} \
+                         --tag=$GITHUB_SHA
+          skaffold build --default-repo=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }} \
+                         --tag=latest
+          
 
       # Verify deployment
       - name: Verify deployment
