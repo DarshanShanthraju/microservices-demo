@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - main
-    #paths:
-      #- src/**
+    paths:
+      - src/**
 env:
   GKE_CLUSTER: onlineboutique
   GKE_ZONE: europe-west3-a
@@ -75,9 +75,8 @@ jobs:
       # Build and deploy to GKE cluster
       - name: Build and deploy to GKE cluster with Skaffold
         run: |
-          gcloud auth configure-docker europe-west3-docker.pkg.dev
-          skaffold run -f=skaffold.yaml --default-repo=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}
-          
+          gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev
+          skaffold run -f=skaffold.yaml --default-repo=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}      
 
       # Verify deployment
       - name: Verify deployment
