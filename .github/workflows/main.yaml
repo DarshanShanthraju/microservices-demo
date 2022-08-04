@@ -5,9 +5,6 @@ on:
       - main
    # paths:
      # - src/**
-env:
-  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 jobs:
   deploy:
     name: Deploy
@@ -48,11 +45,12 @@ jobs:
       # Enable Google Container Registry (GCR) on your GCP project and configure the docker CLI to authenticate to GCR
       - name: Enable GCR 
         run: | 
+          gcloud services enable container.googleapis.com
           gcloud services enable containerregistry.googleapis.com
           gcloud auth configure-docker -q
       # Build and deploy to GKE cluster
       - name: Build and deploy to GKE cluster with Skaffold
-        run: skaffold run -p gcb --default-repo=gcr.io/$GCP_PROJECT_ID
+        run: skaffold run -p gcb --default-repo=gcr.io/'${{ secrets.GCP_PROJECT_ID }}'
       # Verify deployment
       - name: Verify deployment
         run: kubectl get pods
