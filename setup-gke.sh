@@ -5,7 +5,7 @@
 # See https://console.cloud.google.com/projectselector2/home/dashboard
 
 # Set parameters
-export GKE_PROJECT=cr-gcp-devsecops-353409
+export GKE_PROJECT="cr-gcp-devsecops-353409"
 export GKE_REGION=europe-west3
 export GKE_ZONE=europe-west3-a
 export GKE_CLUSTER=onlineboutique
