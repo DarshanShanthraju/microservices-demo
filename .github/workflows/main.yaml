@@ -75,8 +75,8 @@ jobs:
       # Build and deploy to GKE cluster
       - name: Build and deploy to GKE cluster with Skaffold
         run: |
-          skaffold config set --global local-cluster false
-          skaffold build --default-repo=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }} --tag=latest
+          skaffold config set default-repo docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}
+          skaffold run --default-repo=docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}
 
       # Verify deployment
       - name: Verify deployment
