@@ -1,24 +1,27 @@
-
 #!/bin/bash
 
 # Create a project and set GKE_PROJECT to the project id:
 # See https://console.cloud.google.com/projectselector2/home/dashboard
 
 # Set parameters
-export GKE_PROJECT="cr-gcp-devsecops-353409"
+export GKE_PROJECT=cr-gcp-devsecops-353409
+export GKE_CLUSTER=onlineboutique
+export GKE_SERVICE_ACCOUNT=ds-serviceaccount
+
+# Get a list of regions:
+# $ gcloud compute regions list
+#
+# Get a list of zones:
+# $ gcloud compute zones list
 export GKE_REGION=europe-west3
 export GKE_ZONE=europe-west3-a
-export GKE_CLUSTER=onlineboutique
-export GKE_SERVICE_ACCOUNT=github-deployment
 
 gcloud config set project $GKE_PROJECT
 gcloud config set compute/zone $GKE_ZONE
 gcloud config set compute/region $GKE_REGION
 
 # Create a GKE cluster
-gcloud container clusters create onlineboutique \
-    --project=$PROJECT_ID --zone=$GKE_ZONE \
-    --machine-type=e2-standard-2 --num-nodes=4
+gcloud container clusters create $GKE_CLUSTER --project=$GKE_PROJECT --zone=$GKE_ZONE --machine-type=e2-standard-2 --num-nodes=4
 
 # Configure kubctl
 gcloud container clusters get-credentials $GKE_CLUSTER
