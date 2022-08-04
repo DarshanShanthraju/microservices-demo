@@ -77,9 +77,9 @@ jobs:
         run: |
           gcloud auth configure-docker europe-west3-docker.pkg.dev
           skaffold config set --global local-cluster false
-          skaffold build --default-repo=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/loadgenerator \
+          skaffold build --default-repo=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }} \
                          --tag=$GITHUB_SHA
-          skaffold build --default-repo=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/loadgenerator \
+          skaffold build --default-repo=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }} \
                          --tag=latest
           
 
