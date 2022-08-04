@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - src/**
 env:
   GKE_PROJECT: cr-gcp-devsecops-353409
   GKE_SA_KEY: fec576b6bc7e2cc95b62fbaae837e35e3da46a18
@@ -41,7 +43,7 @@ jobs:
         with:
           service_account_key: $GKE_SA_KEY
           project_id: $GKE_PROJECT
-          export_default_credentials: true 
+          export_default_credentials: false 
       # Enable Google Container Registry (GCR) on your GCP project and configure the docker CLI to authenticate to GCR
       - name: Enable GCR 
         run: | 
