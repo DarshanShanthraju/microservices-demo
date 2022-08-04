@@ -17,6 +17,7 @@ jobs:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     steps:
       - uses: actions/checkout@v3
+
       # Install kubectl
       - name: Install kubectl
         run: |
@@ -26,41 +27,47 @@ jobs:
 
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
           kubectl version --client
+
       # Install Skaffold
       - name: Install Skaffold
         run: |
           curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
           sudo install skaffold /usr/local/bin/
           skaffold version
+
       # Cache skaffold image builds & config
       - name: Cache skaffold image builds & config
         uses: actions/cache@v2
         with:
           path: ~/.skaffold/
           key: fixed-${{ github.sha }}
+
       # Setup gcloud CLI
       - uses: google-github-actions/setup-gcloud@v0.6.0
         with:
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           export_default_credentials: true 
+
       - name: Add policy
-        run: gcloud projects add-iam-policy-binding '${{ secrets.GCP_PROJECT_ID }}' \
-             --member=serviceAccount:'${{ secrets.GCP_PROJECT_ID }}'@cloudbuild.gserviceaccount.com \
-             --role=roles/container.developer
+        run: gcloud projects add-iam-policy-binding '${{ secrets.GCP_PROJECT_ID }}' --member='serviceAccount:${{ secrets.GCP_PROJECT_ID }}'@cloudbuild.gserviceaccount.com' --role='roles/container.developer'
+
       # Get the GKE credentials so we can deploy to the cluster
       - uses: google-github-actions/get-gke-credentials@v0.5.0
         with:
           cluster_name: ${{ env.GKE_CLUSTER }}
           location: ${{ env.GKE_ZONE }}
+
       # Build and deploy to GKE cluster
       - name: Build and deploy to GKE cluster with Skaffold
         run: | 
           gcloud auth configure-docker europe-west3-docker.pkg.dev
           skaffold run -p gcb --default-repo=europe-west3.pkg.dev/'${{ secrets.GCP_PROJECT_ID }}'
+
       # Verify deployment
       - name: Verify deployment
         run: kubectl get pods
+        
       # Get the IP address
       - name: Get the IP address
         run: kubectl get service frontend-external
