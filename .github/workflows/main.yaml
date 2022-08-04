@@ -74,10 +74,11 @@ jobs:
 
       # Build and deploy to GKE cluster
       - name: Build and deploy to GKE cluster with Skaffold
-        run: | 
-          gcloud auth configure-docker europe-west3-docker.pkg.dev
-          skaffold run -p gcb --default-repo=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/loadgenerator
-          
+        run: |
+          skaffold config set --global local-cluster false
+      # tag as latest
+          skaffold build --default-repo=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }} --tag=latest
+
       # Verify deployment
       - name: Verify deployment
         run: kubectl get pods
