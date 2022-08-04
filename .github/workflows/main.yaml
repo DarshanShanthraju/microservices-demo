@@ -45,8 +45,8 @@ jobs:
       # Enable Google Container Registry (GCR) on your GCP project and configure the docker CLI to authenticate to GCR
       - name: Enable GCR 
         run: | 
-          gcloud services enable container.googleapis.com
-          gcloud services enable containerregistry.googleapis.com
+          gcloud services enable container.googleapis.com --project '${{ secrets.GCP_PROJECT_ID }}'
+          gcloud services enable containerregistry.googleapis.com --project '${{ secrets.GCP_PROJECT_ID }}'
           gcloud auth configure-docker -q
       # Build and deploy to GKE cluster
       - name: Build and deploy to GKE cluster with Skaffold
